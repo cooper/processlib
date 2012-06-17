@@ -1,6 +1,7 @@
 package process
 
 import (
+	"io"
 	"os"
 	"strconv"
 )
@@ -70,7 +71,36 @@ func (proc *SProcess) HasProperty(prop string) bool {
 
 // returns string property prop
 func (proc *SProcess) GetProperty(prop string) string {
-	return "(undefined)"
+	var (
+		file *os.File
+		err  error
+	)
+
+	// file exists
+	if proc.files[prop] != nil {
+		file = proc.files[prop]
+		file.Seek(0, 0)
+
+		// doesn't exist; create
+	} else {
+		file, err = os.OpenFile("/system/process/"+strconv.Itoa(proc.pid)+"/"+prop, os.O_RDWR, 0666)
+	}
+
+	// read up to 1024 bytes
+	b := make([]byte, 1024)
+	_, err = file.Read(b)
+
+	// an error occured, and it was not an EOF
+	if err != nil && err != io.EOF {
+		return "(undefined)"
+	}
+
+	// file was more than 1M
+	if err != io.EOF {
+		return "(maxed out)"
+	}
+
+	return string(b)
 }
 
 // assign a property
@@ -84,7 +114,7 @@ func (proc *SProcess) SetProperty(prop string, value string) {
 
 		// doesn't exist; create
 	} else {
-		file = os.OpenFile("/system/process/"+strconv.Itoa(proc.pid)+"/"+prop, os.O_RDWR, 0666)
+		file, _ = os.OpenFile("/system/process/"+strconv.Itoa(proc.pid)+"/"+prop, os.O_RDWR, 0666)
 	}
 
 	proc.files[prop] = file
