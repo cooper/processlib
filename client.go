@@ -38,11 +38,18 @@ func (proc *CProcess) GetProperty(prop string) string {
 		return "(undefined)"
 	}
 
-	var b []byte
+	// read up to 512 bytes
+	b := make([]byte, 512)
 	_, err = file.Read(b)
 
+	// an error occured, and it was not an EOF
 	if err != nil && err != io.EOF {
 		return "(undefined)"
+	}
+
+	// file was more than 512 mb
+	if err != io.EOF {
+		return "(maxed out)"
 	}
 
 	file.Close()
