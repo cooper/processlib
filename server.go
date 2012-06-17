@@ -75,5 +75,21 @@ func (proc *SProcess) GetProperty(prop string) string {
 
 // assign a property
 func (proc *SProcess) SetProperty(prop string, value string) {
+	var file *os.File
 
+	// file exists; empty
+	if proc.files[prop] != nil {
+		file = proc.files[prop]
+		file.Truncate(0)
+
+		// doesn't exist; create
+	} else {
+		file = os.OpenFile("/system/process/"+strconv.Itoa(proc.pid)+"/"+prop, os.O_RDWR, 0666)
+	}
+
+	proc.files[prop] = file
+
+	// write
+	file.Seek(0, 0)
+	file.WriteString(value)
 }
