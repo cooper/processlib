@@ -45,5 +45,6 @@ func (proc *CProcess) GetProperty(prop string) string {
 		return "(undefined)"
 	}
 
+	file.Close()
 	return string(b)
 }
