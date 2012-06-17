@@ -27,7 +27,7 @@ type Process interface {
 	// returns the PID of the process
 	PID() int
 
-	// returns a string property.
+	// returns a string property
 	// it should not bail but instead return a string error
 	GetProperty(prop string) string
 }
