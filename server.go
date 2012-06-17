@@ -72,3 +72,8 @@ func (proc *SProcess) HasProperty(prop string) bool {
 func (proc *SProcess) GetProperty(prop string) string {
 	return "(undefined)"
 }
+
+// assign a property
+func (proc *SProcess) SetProperty(prop string, value string) {
+
+}
