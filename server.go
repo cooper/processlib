@@ -27,7 +27,7 @@ func SFromPID(pid int) *SProcess {
 		pid: pid,
 	}
 	processes[pid] = proc
-	os.Mkdir("/system/process/" + strconv.Itoa(pid), os.ModeDir)
+	os.Mkdir("/system/process/"+strconv.Itoa(pid), os.ModeDir)
 
 	return proc
 }
@@ -43,4 +43,12 @@ func Free(proc *SProcess) {
 	os.RemoveAll("/system/process/" + strconv.Itoa(proc.pid))
 
 	delete(processes, proc.pid)
+}
+
+func (proc *SProcess) PID() int {
+	return proc.pid
+}
+
+func (proc *CProcess) HasProperty(prop string) bool {
+	return false
 }

@@ -1,9 +1,20 @@
 package process
 
-type Process struct {
+type CProcess struct {
 	pid int
 }
 
-func FromPID(pid int) *Process {
-	return &Process{pid}
+// creates a new client process
+func CFromPID(pid int) *CProcess {
+	return &CProcess{pid}
+}
+
+// PID getter
+func (proc *CProcess) PID() int {
+	return proc.pid
+}
+
+// returns true if process has property prop
+func (proc *CProcess) HasProperty(prop string) bool {
+	return false
 }
