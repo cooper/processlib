@@ -67,3 +67,8 @@ func (proc *SProcess) HasProperty(prop string) bool {
 
 	return true
 }
+
+// returns string property prop
+func (proc *SProcess) GetProperty(prop string) string {
+	return "(undefined)"
+}

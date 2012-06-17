@@ -26,4 +26,7 @@ type Process interface {
 
 	// returns the PID of the process
 	PID() int
+
+	// returns a string property
+	GetProperty(prop string) string
 }

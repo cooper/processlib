@@ -1,6 +1,7 @@
 package process
 
 import (
+	"io"
 	"os"
 	"strconv"
 )
@@ -28,4 +29,21 @@ func (proc *CProcess) HasProperty(prop string) bool {
 		return false
 	}
 	return true
+}
+
+// returns string property prop
+func (proc *CProcess) GetProperty(prop string) string {
+	file, err := os.Open("/system/process/" + strconv.Itoa(proc.pid) + "/" + prop)
+	if err != nil {
+		return "(undefined)"
+	}
+
+	var b []byte
+	_, err = file.Read(b)
+
+	if err != nil && err != io.EOF {
+		return "(undefined)"
+	}
+
+	return string(b)
 }
