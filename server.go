@@ -32,6 +32,7 @@ func SFromPID(pid int) *SProcess {
 	return proc
 }
 
+// breaks the reference, allowing the object to be disposed of
 func Free(proc *SProcess) {
 
 	// close any open files
@@ -45,10 +46,24 @@ func Free(proc *SProcess) {
 	delete(processes, proc.pid)
 }
 
+// PID getter
 func (proc *SProcess) PID() int {
 	return proc.pid
 }
 
-func (proc *CProcess) HasProperty(prop string) bool {
-	return false
+// returns true if proc has property prop
+func (proc *SProcess) HasProperty(prop string) bool {
+
+	// first, check if a File is open.
+	if proc.files[prop] != nil {
+		return true
+	}
+
+	// otherwise, do a dirty check and see if the file exists.
+	_, err := os.Lstat("/system/process/" + strconv.Itoa(proc.pid))
+	if err != nil {
+		return false
+	}
+
+	return true
 }

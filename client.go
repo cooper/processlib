@@ -1,5 +1,10 @@
 package process
 
+import (
+	"os"
+	"strconv"
+)
+
 type CProcess struct {
 	pid int
 }
@@ -16,5 +21,11 @@ func (proc *CProcess) PID() int {
 
 // returns true if process has property prop
 func (proc *CProcess) HasProperty(prop string) bool {
-	return false
+
+	// if the file exists, it has the property.
+	_, err := os.Lstat("/system/process/" + strconv.Itoa(proc.pid))
+	if err != nil {
+		return false
+	}
+	return true
 }
