@@ -25,7 +25,8 @@ func SFromPID(pid int) *SProcess {
 
 	// create new
 	proc := &SProcess{
-		pid: pid,
+		pid:   pid,
+		files: make(map[string]*os.File),
 	}
 	processes[pid] = proc
 	os.Mkdir("/system/process/"+strconv.Itoa(pid), os.ModeDir)
@@ -114,7 +115,7 @@ func (proc *SProcess) SetProperty(prop string, value string) {
 
 		// doesn't exist; create
 	} else {
-		file, _ = os.OpenFile("/system/process/"+strconv.Itoa(proc.pid)+"/"+prop, os.O_RDWR, 0666)
+		file, _ = os.Create("/system/process/" + strconv.Itoa(proc.pid) + "/" + prop)
 	}
 
 	proc.files[prop] = file
