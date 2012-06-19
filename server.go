@@ -29,7 +29,7 @@ func SFromPID(pid int) *SProcess {
 		files: make(map[string]*os.File),
 	}
 	processes[pid] = proc
-	os.Mkdir("/system/process/"+strconv.Itoa(pid), os.ModeDir)
+	os.Mkdir("/system/process/"+strconv.Itoa(pid), os.ModeDir | 0755)
 
 	return proc
 }
@@ -84,7 +84,7 @@ func (proc *SProcess) GetProperty(prop string) string {
 
 		// doesn't exist; create
 	} else {
-		file, err = os.OpenFile("/system/process/"+strconv.Itoa(proc.pid)+"/"+prop, os.O_RDWR, 0666)
+		file, err = os.OpenFile("/system/process/"+strconv.Itoa(proc.pid)+"/"+prop, os.O_RDWR, 0755)
 	}
 
 	// read up to 1024 bytes
@@ -115,7 +115,7 @@ func (proc *SProcess) SetProperty(prop string, value string) {
 
 		// doesn't exist; create
 	} else {
-		file, _ = os.Create("/system/process/" + strconv.Itoa(proc.pid) + "/" + prop)
+		file, _ = os.OpenFile("/system/process/"+strconv.Itoa(proc.pid)+"/"+prop, os.O_RDWR, 0755)
 	}
 
 	proc.files[prop] = file
