@@ -6,7 +6,7 @@ import (
 	"strconv"
 )
 
-var processes map[int]*SProcess
+var Processes map[int]*SProcess
 
 type SProcess struct {
 	pid      int
@@ -15,13 +15,13 @@ type SProcess struct {
 }
 
 func SFromPID(pid int) *SProcess {
-	if processes == nil {
-		processes = make(map[int]*SProcess)
+	if Processes == nil {
+		Processes = make(map[int]*SProcess)
 	}
 
 	// already exists
-	if processes[pid] != nil {
-		return processes[pid]
+	if Processes[pid] != nil {
+		return Processes[pid]
 	}
 
 	// create new
@@ -29,7 +29,7 @@ func SFromPID(pid int) *SProcess {
 		pid:   pid,
 		files: make(map[string]*os.File),
 	}
-	processes[pid] = proc
+	Processes[pid] = proc
 	os.Mkdir("/system/process/"+strconv.Itoa(pid), 0755)
 
 	return proc
@@ -46,7 +46,7 @@ func Free(proc *SProcess) {
 	// delete the directory
 	os.RemoveAll("/system/process/" + strconv.Itoa(proc.pid))
 
-	delete(processes, proc.pid)
+	delete(Processes, proc.pid)
 }
 
 // PID getter
