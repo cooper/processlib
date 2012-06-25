@@ -9,8 +9,9 @@ import (
 var processes map[int]*SProcess
 
 type SProcess struct {
-	pid   int
-	files map[string]*os.File
+	pid      int
+	files    map[string]*os.File
+	LastPong int64
 }
 
 func SFromPID(pid int) *SProcess {
